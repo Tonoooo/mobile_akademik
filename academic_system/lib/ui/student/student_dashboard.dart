@@ -21,8 +21,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
 
   final List<Widget> _pages = [
     const StudentHomePage(),
-    const StudentHomePage(),
-    const SchedulePage(), // Changed from KelasPage to SchedulePage
+    const KelasPage(),
     const TugasPage(),
     const ProfilePage(),
   ];
