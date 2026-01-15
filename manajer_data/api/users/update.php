@@ -22,13 +22,13 @@ if(!empty($data->id) && !empty($data->username) && !empty($data->name) && !empty
 
         if(!empty($data->password)){
             // Update with password
-            $query = "UPDATE users SET username=:username, password=:password, name=:name, role=:role, major_id=:major_id WHERE id=:id";
+            $query = "UPDATE users SET username=:username, password=:password, name=:name, role=:role, major_id=:major_id, dosen_wali_id=:dosen_wali_id WHERE id=:id";
             $stmt = $conn->prepare($query);
             $password_hash = password_hash($data->password, PASSWORD_DEFAULT);
             $stmt->bindParam(":password", $password_hash);
         } else {
             // Update without password
-            $query = "UPDATE users SET username=:username, name=:name, role=:role, major_id=:major_id WHERE id=:id";
+            $query = "UPDATE users SET username=:username, name=:name, role=:role, major_id=:major_id, dosen_wali_id=:dosen_wali_id WHERE id=:id";
             $stmt = $conn->prepare($query);
         }
 
@@ -39,6 +39,10 @@ if(!empty($data->id) && !empty($data->username) && !empty($data->name) && !empty
         // Handle major_id (can be null)
         $major_id = !empty($data->major_id) ? $data->major_id : null;
         $stmt->bindParam(":major_id", $major_id);
+
+        // Handle dosen_wali_id (can be null)
+        $dosen_wali_id = !empty($data->dosen_wali_id) ? $data->dosen_wali_id : null;
+        $stmt->bindParam(":dosen_wali_id", $dosen_wali_id);
 
         $stmt->bindParam(":id", $data->id);
 

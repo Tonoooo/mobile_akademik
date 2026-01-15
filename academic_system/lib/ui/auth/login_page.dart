@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Universitas Maju Jaya',
+                  'Universitas Teknologi Bandung',
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: Colors.white70,
@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: _emailController,
                           decoration: InputDecoration(
-                            labelText: 'Email',
+                            labelText: 'Username/NIM',
                             prefixIcon: const Icon(Icons.email_outlined),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Email tidak boleh kosong';
+                              return 'Username/NIM tidak boleh kosong';
                             }
                             return null;
                           },

@@ -83,7 +83,17 @@ class _AdvisoryPageState extends State<AdvisoryPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _advisees.isEmpty
-              ? Center(child: Text('Belum ada mahasiswa bimbingan', style: GoogleFonts.poppins()))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Belum ada mahasiswa bimbingan', style: GoogleFonts.poppins()),
+                      const SizedBox(height: 8),
+                      Text('Debug: Dosen ID = ${Provider.of<AuthViewModel>(context).currentUser?.id}', 
+                        style: const TextStyle(color: Colors.grey, fontSize: 12)),
+                    ],
+                  ),
+                )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: _advisees.length,

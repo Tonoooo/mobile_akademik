@@ -25,7 +25,7 @@ if(
             exit();
         }
 
-        $query = "INSERT INTO users SET username=:username, password=:password, name=:name, role=:role, major_id=:major_id";
+        $query = "INSERT INTO users SET username=:username, password=:password, name=:name, role=:role, major_id=:major_id, dosen_wali_id=:dosen_wali_id";
         $stmt = $conn->prepare($query);
 
         $stmt->bindParam(":username", $data->username);
@@ -37,6 +37,10 @@ if(
         // Handle major_id (can be null)
         $major_id = !empty($data->major_id) ? $data->major_id : null;
         $stmt->bindParam(":major_id", $major_id);
+
+        // Handle dosen_wali_id (can be null)
+        $dosen_wali_id = !empty($data->dosen_wali_id) ? $data->dosen_wali_id : null;
+        $stmt->bindParam(":dosen_wali_id", $dosen_wali_id);
 
         if($stmt->execute()){
             echo json_encode(["success" => true, "message" => "User berhasil dibuat."]);
