@@ -208,7 +208,94 @@ class HttpAcademicRepository implements AcademicRepository {
   }
 
   @override
-  Future<List<MaterialModel>> getClassMaterials(String classId) async => [];
+  Future<List<ClassSessionModel>> getLecturerClasses(String dosenId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/classes/read_by_dosen.php?dosen_id=$dosenId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => ClassSessionModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting lecturer classes: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<List<MaterialModel>> getClassMaterials(String classId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/materials/read.php?class_session_id=$classId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => MaterialModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting class materials: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<bool> uploadMaterial({
+    required String classSessionId, 
+    required String title, 
+    required String type,
+    String? filePath,
+    Uint8List? fileBytes,
+    required String filename,
+  }) async {
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/academic/materials/create.php'));
+      request.fields['class_session_id'] = classSessionId;
+      request.fields['title'] = title;
+      request.fields['type'] = type;
+      
+      if (fileBytes != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'file', 
+          fileBytes,
+          filename: filename,
+        ));
+      } else if (filePath != null) {
+        request.files.add(await http.MultipartFile.fromPath('file', filePath));
+      } else {
+        return false;
+      }
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final respStr = await response.stream.bytesToString();
+        final data = jsonDecode(respStr);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error uploading material: $e');
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> deleteMaterial(String materialId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/academic/materials/delete.php'),
+        body: jsonEncode({'id': materialId}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error deleting material: $e');
+    }
+    return false;
+  }
 
   @override
   Future<bool> uploadSubmission(SubmissionModel submission) async => false; // Implemented

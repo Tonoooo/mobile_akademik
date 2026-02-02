@@ -175,6 +175,18 @@ class MaterialModel {
     required this.type,
     required this.createdAt,
   });
+
+  factory MaterialModel.fromJson(Map<String, dynamic> json) {
+    return MaterialModel(
+      id: json['id'].toString(),
+      classId: json['class_session_id'].toString(),
+      title: json['title'],
+      description: json['description'] ?? '',
+      fileUrl: json['file_url'],
+      type: json['type'],
+      createdAt: DateTime.parse(json['created_at']),
+    );
+  }
 }
 
 class SubmissionModel {

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import 'advisory_page.dart';
+import 'lecturer_classes_page.dart';
 
 class LecturerDashboard extends StatelessWidget {
   const LecturerDashboard({super.key});
@@ -40,15 +41,13 @@ class LecturerDashboard extends StatelessWidget {
             ),
             _buildMenuCard(
               context,
-              title: 'Jadwal Mengajar',
-              icon: Icons.calendar_today,
+              title: 'Kelas Mengajar',
+              icon: Icons.class_outlined,
               color: Colors.orange,
-              onTap: () {
-                // TODO: Implement Schedule Page
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Fitur belum tersedia')),
-                );
-              },
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LecturerClassesPage()),
+              ),
             ),
           ],
         ),

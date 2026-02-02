@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import '../models/academic_models.dart';
 import '../models/user_model.dart';
 
@@ -19,6 +20,18 @@ abstract class AcademicRepository {
   Future<List<MaterialModel>> getClassMaterials(String classId);
   Future<bool> uploadSubmission(SubmissionModel submission);
   Future<SubmissionModel?> getStudentSubmission(String materialId, String studentId);
+
+  // Lecturer Features
+  Future<List<ClassSessionModel>> getLecturerClasses(String dosenId);
+  Future<bool> uploadMaterial({
+    required String classSessionId, 
+    required String title, 
+    required String type,
+    String? filePath,
+    Uint8List? fileBytes,
+    required String filename,
+  });
+  Future<bool> deleteMaterial(String materialId);
 }
 
 class MockAcademicRepository implements AcademicRepository {
@@ -173,6 +186,31 @@ class MockAcademicRepository implements AcademicRepository {
 
   @override
   Future<bool> approveKRS(String studentId, String status) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return true;
+  }
+
+  @override
+  Future<List<ClassSessionModel>> getLecturerClasses(String dosenId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return [];
+  }
+
+  @override
+  Future<bool> uploadMaterial({
+    required String classSessionId, 
+    required String title, 
+    required String type,
+    String? filePath,
+    Uint8List? fileBytes,
+    required String filename,
+  }) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return true;
+  }
+
+  @override
+  Future<bool> deleteMaterial(String materialId) async {
     await Future.delayed(const Duration(milliseconds: 500));
     return true;
   }
