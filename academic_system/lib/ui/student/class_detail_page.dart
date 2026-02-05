@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../viewmodels/student_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../models/academic_models.dart';
+import 'materials/student_materials_page.dart';
 
 class ClassDetailPage extends StatefulWidget {
   final ClassSessionModel classSession;
@@ -91,10 +92,17 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildActionButton(Icons.menu_book, 'Materi', Colors.blue),
-                _buildActionButton(Icons.assignment, 'Tugas', Colors.orange),
-                _buildActionButton(Icons.quiz, 'Ujian', Colors.red),
-                _buildActionButton(Icons.qr_code, 'Absen', Colors.green),
+                _buildActionButton(Icons.menu_book, 'Materi', Colors.blue, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StudentMaterialsPage(classSession: widget.classSession),
+                    ),
+                  );
+                }),
+                _buildActionButton(Icons.assignment, 'Tugas', Colors.orange, () {}),
+                _buildActionButton(Icons.quiz, 'Ujian', Colors.red, () {}),
+                _buildActionButton(Icons.qr_code, 'Absen', Colors.green, () {}),
               ],
             ),
           ),
@@ -130,20 +138,27 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
     );
   }
 
-  Widget _buildActionButton(IconData icon, String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: color, size: 24),
+  Widget _buildActionButton(IconData icon, String label, Color color, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: color, size: 24),
+            ),
+            const SizedBox(height: 4),
+            Text(label, style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500)),
+          ],
         ),
-        const SizedBox(height: 4),
-        Text(label, style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500)),
-      ],
+      ),
     );
   }
 }

@@ -179,7 +179,7 @@ class MaterialModel {
   factory MaterialModel.fromJson(Map<String, dynamic> json) {
     return MaterialModel(
       id: json['id'].toString(),
-      classId: json['class_session_id'].toString(),
+      classId: json['class_id']?.toString() ?? json['class_session_id'].toString(),
       title: json['title'],
       description: json['description'] ?? '',
       fileUrl: json['file_url'],

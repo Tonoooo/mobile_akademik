@@ -225,9 +225,11 @@ class HttpAcademicRepository implements AcademicRepository {
   }
 
   @override
-  Future<List<MaterialModel>> getClassMaterials(String classId) async {
+  Future<List<MaterialModel>> getClassMaterials(String classId, {String? type}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/academic/materials/read.php?class_session_id=$classId'));
+      final url = '$baseUrl/academic/materials/read.php?class_session_id=$classId'
+          '${type != null ? '&type=$type' : ''}';
+      final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {

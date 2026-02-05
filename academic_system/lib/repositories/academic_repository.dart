@@ -17,7 +17,7 @@ abstract class AcademicRepository {
   Future<bool> approveKRS(String studentId, String status); // status: 'approved' or 'rejected'
 
   // Materials & Submissions
-  Future<List<MaterialModel>> getClassMaterials(String classId);
+  Future<List<MaterialModel>> getClassMaterials(String classId, {String? type});
   Future<bool> uploadSubmission(SubmissionModel submission);
   Future<SubmissionModel?> getStudentSubmission(String materialId, String studentId);
 
@@ -106,7 +106,7 @@ class MockAcademicRepository implements AcademicRepository {
   }
 
   @override
-  Future<List<MaterialModel>> getClassMaterials(String classId) async {
+  Future<List<MaterialModel>> getClassMaterials(String classId, {String? type}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     return _materials.where((m) => m.classId == classId).toList();
   }

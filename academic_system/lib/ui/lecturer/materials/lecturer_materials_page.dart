@@ -30,7 +30,7 @@ class _LecturerMaterialsPageState extends State<LecturerMaterialsPage> {
   Future<void> _fetchMaterials() async {
     setState(() => _isLoading = true);
     final repo = Provider.of<AcademicRepository>(context, listen: false);
-    final materials = await repo.getClassMaterials(widget.classSession.id);
+    final materials = await repo.getClassMaterials(widget.classSession.id, type: 'materi');
     if (mounted) {
       setState(() {
         _materials = materials;
@@ -155,47 +155,61 @@ class _LecturerMaterialsPageState extends State<LecturerMaterialsPage> {
                     ],
                   ),
                 )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _materials.length,
-                  itemBuilder: (context, index) {
-                    final material = _materials[index];
-                    return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: ListTile(
-                        leading: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: const Icon(Icons.description, color: Colors.blue),
-                        ),
-                        title: Text(material.title, style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
-                        subtitle: Text(DateFormat('dd MMM yyyy HH:mm').format(material.createdAt), style: GoogleFonts.poppins(fontSize: 12)),
-                        trailing: PopupMenuButton(
-                          itemBuilder: (context) => [
-                            const PopupMenuItem(
-                              value: 'download',
-                              child: Row(children: [Icon(Icons.download, size: 18), SizedBox(width: 8), Text('Download')]),
-                            ),
-                            const PopupMenuItem(
-                              value: 'delete',
-                              child: Row(children: [Icon(Icons.delete, size: 18, color: Colors.red), SizedBox(width: 8), Text('Hapus', style: TextStyle(color: Colors.red))]),
-                            ),
-                          ],
-                          onSelected: (value) {
-                            if (value == 'delete') {
-                              _deleteMaterial(material);
-                            } else if (value == 'download') {
-                              launchUrl(Uri.parse(material.fileUrl), mode: LaunchMode.externalApplication);
-                            }
+              : SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: DataTable(
+                        columns: [
+                          const DataColumn(label: Text('No')),
+                          const DataColumn(label: Text('Judul Materi')),
+                          const DataColumn(label: Text('Tipe')),
+                          const DataColumn(label: Text('Tanggal Upload')),
+                          const DataColumn(label: Text('Aksi')),
+                        ],
+                        rows: List<DataRow>.generate(
+                          _materials.length,
+                          (index) {
+                            final material = _materials[index];
+                            return DataRow(
+                              cells: [
+                                DataCell(Text('${index + 1}')),
+                                DataCell(Text(material.title)),
+                                DataCell(Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    material.type.toUpperCase(),
+                                    style: GoogleFonts.poppins(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.w600),
+                                  ),
+                                )),
+                                DataCell(Text(DateFormat('dd MMM yyyy HH:mm').format(material.createdAt))),
+                                DataCell(Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.download, color: Colors.green),
+                                      onPressed: () => launchUrl(Uri.parse(material.fileUrl), mode: LaunchMode.externalApplication),
+                                      tooltip: 'Download',
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.red),
+                                      onPressed: () => _deleteMaterial(material),
+                                      tooltip: 'Hapus',
+                                    ),
+                                  ],
+                                )),
+                              ],
+                            );
                           },
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
     );
   }
