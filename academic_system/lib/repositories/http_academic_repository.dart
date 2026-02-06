@@ -400,6 +400,26 @@ class HttpAcademicRepository implements AcademicRepository {
     }
     return false;
   }
+
+  @override
+  Future<List<MaterialModel>> getPendingAssignments(String studentId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/assignments/list_pending.php?student_id=$studentId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) {
+            // Helper to map
+            return MaterialModel.fromJson(json);
+          }).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting pending assignments: $e');
+    }
+    return [];
+  }
+
   @override
   Future<List<EnrollmentModel>> getClassEnrollments(String classId) async {
     try {

@@ -187,6 +187,7 @@ class MaterialModel {
   final String type; // 'material', 'tugas', 'ujian'
   final DateTime createdAt;
   final DateTime? deadline;
+  final String? courseName; // Extra field for lists
 
   MaterialModel({
     required this.id,
@@ -197,6 +198,7 @@ class MaterialModel {
     required this.type,
     required this.createdAt,
     this.deadline,
+    this.courseName,
   });
 
   factory MaterialModel.fromJson(Map<String, dynamic> json) {
@@ -209,6 +211,7 @@ class MaterialModel {
       type: json['type'],
       createdAt: DateTime.parse(json['created_at']),
       deadline: json['deadline'] != null ? DateTime.parse(json['deadline']) : null,
+      courseName: json['course_name'],
     );
   }
 }

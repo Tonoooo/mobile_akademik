@@ -192,34 +192,34 @@ class _LoginPageState extends State<LoginPage> {
                         
                         const SizedBox(height: 16),
                         // Hint for Demo
-                        Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            children: [
-                              Text(
-                                'Demo Accounts (Password: password)',
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'super@admin.com | admin@kampus.com\ndosen@kampus.com | mhs@kampus.com',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 11,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.all(12),
+                        //   decoration: BoxDecoration(
+                        //     color: Colors.grey[100],
+                        //     borderRadius: BorderRadius.circular(8),
+                        //   ),
+                        //   child: Column(
+                        //     children: [
+                        //       Text(
+                        //         'Demo Accounts (Password: password)',
+                        //         style: GoogleFonts.poppins(
+                        //           fontSize: 12,
+                        //           fontWeight: FontWeight.bold,
+                        //           color: Colors.grey[700],
+                        //         ),
+                        //       ),
+                        //       const SizedBox(height: 4),
+                        //       Text(
+                        //         'super@admin.com | admin@kampus.com\ndosen@kampus.com | mhs@kampus.com',
+                        //         textAlign: TextAlign.center,
+                        //         style: GoogleFonts.poppins(
+                        //           fontSize: 11,
+                        //           color: Colors.grey[600],
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

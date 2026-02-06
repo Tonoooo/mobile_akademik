@@ -32,6 +32,7 @@ abstract class AcademicRepository {
     Uint8List? fileBytes,
     String? filename,
   });
+  Future<List<MaterialModel>> getPendingAssignments(String studentId);
   
   // Class Management
   Future<List<EnrollmentModel>> getClassEnrollments(String classId); // Get students in a class
@@ -194,6 +195,9 @@ class MockAcademicRepository implements AcademicRepository {
      await Future.delayed(const Duration(seconds: 1));
      return true;
   }
+
+  @override
+  Future<List<MaterialModel>> getPendingAssignments(String studentId) async => [];
 
   @override
   Future<bool> createAttendanceSession(String classId, String title, int meetingNumber, List<Map<String, dynamic>> students) async => true;

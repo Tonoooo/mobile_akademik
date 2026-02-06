@@ -248,12 +248,10 @@ class StudentHomePage extends StatelessWidget {
             crossAxisSpacing: 16,
             childAspectRatio: 0.8,
             children: [
-              _buildMenuIcon(Icons.badge, 'KTM', Colors.orange),
               _buildMenuIcon(Icons.account_balance_wallet, 'Keuangan', Colors.green),
               _buildMenuIcon(Icons.edit_note, 'KRS', Colors.blue, onTap: () {
                  Navigator.push(context, MaterialPageRoute(builder: (_) => const KrsPage()));
               }),
-              _buildMenuIcon(Icons.assignment_turned_in, 'KHS', Colors.purple),
               _buildMenuIcon(Icons.bar_chart, 'Nilai', Colors.red, onTap: () {
                 if (user != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (_) => StudentGradeListPage(studentId: user.id)));
@@ -262,10 +260,6 @@ class StudentHomePage extends StatelessWidget {
               _buildMenuIcon(Icons.campaign, 'Pengumuman', Colors.orange[800]!, onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const StudentAnnouncementPage()));
               }),
-              _buildMenuIcon(Icons.description, 'Transkrip', Colors.teal),
-              _buildMenuIcon(Icons.qr_code_scanner, 'Presensi', Colors.indigo),
-              _buildMenuIcon(Icons.supervisor_account, 'Perwalian', Colors.brown),
-              _buildMenuIcon(Icons.star, 'SKKM', Colors.amber),
             ],
           ),
         ],
