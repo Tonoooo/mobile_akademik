@@ -8,6 +8,7 @@ import 'schedule_page.dart';
 import 'kelas_page.dart';
 import 'tugas_page.dart';
 import 'grades/student_grade_list_page.dart';
+import 'announcements/student_announcement_page.dart';
 import 'profile_page.dart';
 
 class StudentDashboard extends StatefulWidget {
@@ -257,6 +258,9 @@ class StudentHomePage extends StatelessWidget {
                 if (user != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (_) => StudentGradeListPage(studentId: user.id)));
                 }
+              }),
+              _buildMenuIcon(Icons.campaign, 'Pengumuman', Colors.orange[800]!, onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const StudentAnnouncementPage()));
               }),
               _buildMenuIcon(Icons.description, 'Transkrip', Colors.teal),
               _buildMenuIcon(Icons.qr_code_scanner, 'Presensi', Colors.indigo),

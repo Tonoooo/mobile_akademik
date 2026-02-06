@@ -6,6 +6,7 @@ import 'majors/major_list_page.dart';
 import 'courses/course_list_page.dart';
 import 'classes/class_list_page.dart';
 import 'users/user_list_page.dart';
+import 'announcements/admin_announcement_page.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -50,6 +51,13 @@ class AdminDashboard extends StatelessWidget {
             Icons.calendar_today,
             Colors.green,
             () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ClassListPage())),
+          ),
+          _buildMenuCard(
+            context,
+            'Pengumuman',
+            Icons.campaign,
+            Colors.purple,
+            () => Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminAnnouncementPage())),
           ),
         ],
       ),

@@ -59,6 +59,10 @@ abstract class AcademicRepository {
   Future<GradeDetailModel?> getStudentGradeDetail(String classId, String studentId);
   Future<bool> updateFinalGrade(String enrollmentId, String grade);
   Future<List<EnrollmentModel>> getStudentAllGrades(String studentId);
+
+  // Announcements
+  Future<List<AnnouncementModel>> getAnnouncements();
+  Future<bool> createAnnouncement(String title, String content, {String? attachmentPath, Uint8List? attachmentBytes, String? attachmentName, required String userId});
 }
 
 class MockAcademicRepository implements AcademicRepository {
@@ -306,4 +310,10 @@ class MockAcademicRepository implements AcademicRepository {
 
   @override
   Future<List<EnrollmentModel>> getStudentAllGrades(String studentId) async => [];
+
+  @override
+  Future<List<AnnouncementModel>> getAnnouncements() async => [];
+
+  @override
+  Future<bool> createAnnouncement(String title, String content, {String? attachmentPath, Uint8List? attachmentBytes, String? attachmentName, required String userId}) async => true;
 }

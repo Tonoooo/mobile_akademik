@@ -603,4 +603,54 @@ class HttpAcademicRepository implements AcademicRepository {
     }
     return [];
   }
+
+  @override
+  Future<List<AnnouncementModel>> getAnnouncements() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/announcements/list.php'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => AnnouncementModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting announcements: $e');
+    }
+    return [];
+  }
+
+  @override
+  @override
+  Future<bool> createAnnouncement(String title, String content, {String? attachmentPath, Uint8List? attachmentBytes, String? attachmentName, required String userId}) async {
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/announcements/create.php'));
+      request.fields['title'] = title;
+      request.fields['content'] = content;
+      request.fields['created_by'] = userId;
+
+      if (attachmentBytes != null && attachmentName != null) {
+        // Web / Bytes provided
+        request.files.add(http.MultipartFile.fromBytes(
+          'attachment',
+          attachmentBytes,
+          filename: attachmentName,
+        ));
+      } else if (attachmentPath != null) {
+        // Mobile / Path provided
+        request.files.add(await http.MultipartFile.fromPath('attachment', attachmentPath));
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
+      
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error creating announcement: $e');
+    }
+    return false;
+  }
 }

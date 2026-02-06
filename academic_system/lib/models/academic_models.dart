@@ -429,3 +429,32 @@ class GradeItem {
     );
   }
 }
+
+class AnnouncementModel {
+  final String id;
+  final String title;
+  final String content;
+  final String? attachmentUrl;
+  final String? authorName;
+  final DateTime createdAt;
+
+  AnnouncementModel({
+    required this.id,
+    required this.title,
+    required this.content,
+    this.attachmentUrl,
+    this.authorName,
+    required this.createdAt,
+  });
+
+  factory AnnouncementModel.fromJson(Map<String, dynamic> json) {
+    return AnnouncementModel(
+      id: json['id'].toString(),
+      title: json['title'],
+      content: json['content'] ?? '',
+      attachmentUrl: json['attachment_url'],
+      authorName: json['author_name'],
+      createdAt: DateTime.parse(json['created_at']),
+    );
+  }
+}
