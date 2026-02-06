@@ -400,4 +400,108 @@ class HttpAcademicRepository implements AcademicRepository {
     }
     return false;
   }
+  @override
+  Future<List<EnrollmentModel>> getClassEnrollments(String classId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/enrollments/list_by_class.php?class_id=$classId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => EnrollmentModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting class enrollments: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<bool> createAttendanceSession(String classId, String title, int meetingNumber, List<Map<String, dynamic>> students) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/academic/attendance/create_session.php'),
+        body: jsonEncode({
+          'class_id': classId,
+          'title': title,
+          'meeting_number': meetingNumber,
+          'students': students, 
+        }),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error creating attendance: $e');
+    }
+    return false;
+  }
+
+  @override
+  Future<List<AttendanceSessionModel>> getClassAttendanceSessions(String classId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/attendance/list_sessions.php?class_id=$classId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => AttendanceSessionModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting attendance sessions: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getAttendanceSessionDetails(String sessionId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/attendance/get_session_details.php?session_id=$sessionId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          final session = AttendanceSessionModel.fromJson(data['data']['session']);
+          final records = (data['data']['records'] as List).map((json) => AttendanceRecordModel.fromJson(json)).toList();
+          return {'session': session, 'records': records};
+        }
+      }
+    } catch (e) {
+      print('Error getting attendance details: $e');
+    }
+    return null;
+  }
+
+  @override
+  Future<List<AttendanceSummaryModel>> getStudentAttendanceSummary(String studentId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/attendance/student_summary.php?student_id=$studentId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => AttendanceSummaryModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting student attendance summary: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<List<AttendanceRecordModel>> getStudentClassAttendance(String studentId, String classId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/attendance/student_class_records.php?student_id=$studentId&class_id=$classId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => AttendanceRecordModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting student class attendance: $e');
+    }
+    return [];
+  }
 }

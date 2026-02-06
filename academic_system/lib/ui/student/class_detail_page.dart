@@ -9,6 +9,7 @@ import '../../models/academic_models.dart';
 import 'materials/student_materials_page.dart';
 import 'materials/student_assignments_page.dart';
 import 'materials/student_exams_page.dart';
+import 'attendance/student_class_attendance_page.dart';
 
 class ClassDetailPage extends StatefulWidget {
   final ClassSessionModel classSession;
@@ -118,7 +119,20 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
                     ),
                   );
                 }),
-                _buildActionButton(Icons.qr_code, 'Absen', Colors.green, () {}),
+                _buildActionButton(Icons.qr_code, 'Absen', Colors.green, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StudentClassAttendancePage(enrollment: EnrollmentModel(
+                        id: '', // Dummy, only classId is needed for fetch
+                        studentId: user!.id,
+                        classId: widget.classSession.id,
+                        status: 'active',
+                        classSession: widget.classSession
+                      )),
+                    ),
+                  );
+                }),
               ],
             ),
           ),

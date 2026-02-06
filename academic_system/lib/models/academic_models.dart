@@ -147,6 +147,9 @@ class EnrollmentModel {
   final String status; // 'active', 'dropped'
   final String? grade; // 'A', 'B', etc.
 
+  final String? studentName;
+  final String? studentNim;
+
   EnrollmentModel({
     required this.id,
     required this.studentId,
@@ -154,7 +157,22 @@ class EnrollmentModel {
     this.classSession,
     required this.status,
     this.grade,
+    this.studentName,
+    this.studentNim,
   });
+
+  factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
+    return EnrollmentModel(
+      id: json['id'].toString(),
+      studentId: json['student_id'].toString(),
+      classId: json['class_id'].toString(),
+      status: json['status'] ?? 'active',
+      grade: json['grade'],
+      studentName: json['student_name'],
+      studentNim: json['student_nim'],
+      classSession: (json['course_name'] != null && json['day'] != null) ? ClassSessionModel.fromJson(json) : null,
+    );
+  }
 }
 
 class MaterialModel {
@@ -226,6 +244,105 @@ class SubmissionModel {
       answer: json['answer'],
       studentName: json['student_name'],
       studentNim: json['student_nim'],
+    );
+  }
+}
+
+class AttendanceSessionModel {
+  final String id;
+  final String classId;
+  final String title;
+  final int meetingNumber;
+  final DateTime createdAt;
+
+  AttendanceSessionModel({
+    required this.id,
+    required this.classId,
+    required this.title,
+    required this.meetingNumber,
+    required this.createdAt,
+  });
+
+  factory AttendanceSessionModel.fromJson(Map<String, dynamic> json) {
+    return AttendanceSessionModel(
+      id: json['id'].toString(),
+      classId: json['class_id'].toString(),
+      title: json['title'],
+      meetingNumber: int.parse(json['meeting_number'].toString()),
+      createdAt: DateTime.parse(json['created_at']),
+    );
+  }
+}
+
+class AttendanceRecordModel {
+  final String id;
+  final String sessionId;
+  final String studentId;
+  final String status; // H, S, I, A
+  final String? studentName;
+  final String? studentNim;
+  final String? sessionTitle; // For student view
+  final int? meetingNumber; // For student view
+  final DateTime? sessionDate; // For student view
+
+  AttendanceRecordModel({
+    required this.id,
+    required this.sessionId,
+    required this.studentId,
+    required this.status,
+    this.studentName,
+    this.studentNim,
+    this.sessionTitle,
+    this.meetingNumber,
+    this.sessionDate,
+  });
+
+  factory AttendanceRecordModel.fromJson(Map<String, dynamic> json) {
+    return AttendanceRecordModel(
+      id: json['id']?.toString() ?? '',
+      sessionId: json['session_id']?.toString() ?? '',
+      studentId: json['student_id']?.toString() ?? '',
+      status: json['status'],
+      studentName: json['student_name'],
+      studentNim: json['student_nim'],
+      sessionTitle: json['title'],
+      meetingNumber: json['meeting_number'] != null ? int.parse(json['meeting_number'].toString()) : null,
+      sessionDate: json['session_date'] != null ? DateTime.parse(json['session_date']) : null,
+    );
+  }
+}
+
+class AttendanceSummaryModel {
+  final String classId;
+  final String courseName;
+  final String courseCode;
+  final int totalMeetings;
+  final int totalHadir;
+  final int totalSakit;
+  final int totalIzin;
+  final int totalAlpha;
+
+  AttendanceSummaryModel({
+    required this.classId,
+    required this.courseName,
+    required this.courseCode,
+    required this.totalMeetings,
+    required this.totalHadir,
+    required this.totalSakit,
+    required this.totalIzin,
+    required this.totalAlpha,
+  });
+
+  factory AttendanceSummaryModel.fromJson(Map<String, dynamic> json) {
+    return AttendanceSummaryModel(
+      classId: json['class_id'].toString(),
+      courseName: json['course_name'],
+      courseCode: json['course_code'],
+      totalMeetings: int.parse(json['total_meetings'].toString()),
+      totalHadir: int.parse(json['total_hadir'].toString()),
+      totalSakit: int.parse(json['total_sakit'].toString()),
+      totalIzin: int.parse(json['total_izin'].toString()),
+      totalAlpha: int.parse(json['total_alpha'].toString()),
     );
   }
 }

@@ -16,6 +16,8 @@ abstract class AcademicRepository {
   Future<List<UserModel>> getAdvisees(String dosenId);
   Future<bool> approveKRS(String studentId, String status); // status: 'approved' or 'rejected'
 
+  Future<List<ClassSessionModel>> getLecturerClasses(String dosenId);
+
   // Materials & Submissions
   Future<List<MaterialModel>> getClassMaterials(String classId, {String? type});
   Future<bool> uploadSubmission(SubmissionModel submission);
@@ -30,9 +32,16 @@ abstract class AcademicRepository {
     Uint8List? fileBytes,
     String? filename,
   });
+  
+  // Class Management
+  Future<List<EnrollmentModel>> getClassEnrollments(String classId); // Get students in a class
 
-  // Lecturer Features
-  Future<List<ClassSessionModel>> getLecturerClasses(String dosenId);
+  // Attendance
+  Future<bool> createAttendanceSession(String classId, String title, int meetingNumber, List<Map<String, dynamic>> students);
+  Future<List<AttendanceSessionModel>> getClassAttendanceSessions(String classId);
+  Future<Map<String, dynamic>?> getAttendanceSessionDetails(String sessionId);
+  Future<List<AttendanceSummaryModel>> getStudentAttendanceSummary(String studentId);
+  Future<List<AttendanceRecordModel>> getStudentClassAttendance(String studentId, String classId);
   Future<bool> uploadMaterial({
     required String classSessionId, 
     required String title, 
@@ -124,6 +133,12 @@ class MockAcademicRepository implements AcademicRepository {
   }
 
   @override
+  Future<List<EnrollmentModel>> getClassEnrollments(String classId) async {
+    await Future.delayed(const Duration(milliseconds: 800));
+    return [];
+  }
+
+  @override
   Future<bool> uploadSubmission(SubmissionModel submission) async {
     await Future.delayed(const Duration(seconds: 1));
     _submissions.add(submission);
@@ -169,6 +184,21 @@ class MockAcademicRepository implements AcademicRepository {
      await Future.delayed(const Duration(seconds: 1));
      return true;
   }
+
+  @override
+  Future<bool> createAttendanceSession(String classId, String title, int meetingNumber, List<Map<String, dynamic>> students) async => true;
+
+  @override
+  Future<List<AttendanceSessionModel>> getClassAttendanceSessions(String classId) async => [];
+
+  @override
+  Future<Map<String, dynamic>?> getAttendanceSessionDetails(String sessionId) async => null;
+
+  @override
+  Future<List<AttendanceSummaryModel>> getStudentAttendanceSummary(String studentId) async => [];
+
+  @override
+  Future<List<AttendanceRecordModel>> getStudentClassAttendance(String studentId, String classId) async => [];
 
   @override
   Future<bool> enrollClass(String studentId, String classId) async {

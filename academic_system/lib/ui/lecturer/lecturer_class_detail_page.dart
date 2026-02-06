@@ -4,6 +4,7 @@ import '../../models/academic_models.dart';
 import 'materials/lecturer_materials_page.dart';
 import 'materials/lecturer_assignments_page.dart';
 import 'materials/lecturer_exams_page.dart';
+import 'attendance/lecturer_attendance_page.dart';
 
 class LecturerClassDetailPage extends StatelessWidget {
   final ClassSessionModel classSession;
@@ -107,9 +108,10 @@ class LecturerClassDetailPage extends StatelessWidget {
                   'Absensi', 
                   Icons.qr_code, 
                   Colors.green,
-                  () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Fitur Absensi akan segera hadir')));
-                  },
+                  () => Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (_) => LecturerAttendancePage(classSession: classSession))
+                  ),
                 ),
               ],
             ),
