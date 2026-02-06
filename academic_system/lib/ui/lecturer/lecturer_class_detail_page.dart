@@ -5,6 +5,7 @@ import 'materials/lecturer_materials_page.dart';
 import 'materials/lecturer_assignments_page.dart';
 import 'materials/lecturer_exams_page.dart';
 import 'attendance/lecturer_attendance_page.dart';
+import 'grades/lecturer_grade_recap_page.dart';
 
 class LecturerClassDetailPage extends StatelessWidget {
   final ClassSessionModel classSession;
@@ -113,6 +114,16 @@ class LecturerClassDetailPage extends StatelessWidget {
                     MaterialPageRoute(builder: (_) => LecturerAttendancePage(classSession: classSession))
                   ),
                 ),
+                _buildMenuCard(
+                  context, 
+                  'Nilai', 
+                  Icons.bar_chart, 
+                  Colors.purple,
+                  () => Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (_) => LecturerGradeRecapPage(classSession: classSession))
+                  ),
+                ),
               ],
             ),
           ),
@@ -122,6 +133,11 @@ class LecturerClassDetailPage extends StatelessWidget {
   }
 
   Widget _buildMenuCard(BuildContext context, String title, IconData icon, Color color, VoidCallback onTap) {
+    if (title == 'Nilai' && onTap == null) {
+        // Fallback or explicit handling if I missed where 'Nilai' card is actually created
+        // Wait, looking at lines 69-115, the "Nilai" button is NOT there. It only has Materi, Tugas, Ujian, Absensi.
+        // I need to ADD the button first!
+    }
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

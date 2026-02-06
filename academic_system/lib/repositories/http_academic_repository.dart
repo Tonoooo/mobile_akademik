@@ -504,4 +504,103 @@ class HttpAcademicRepository implements AcademicRepository {
     }
     return [];
   }
+
+  @override
+  Future<List<EnrollmentModel>> getClassGrades(String classId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/grades/class_summary.php?class_id=$classId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          // We assume the response structure matches EnrollmentModel minimally (student data + grade)
+          return (data['data'] as List).map((json) => EnrollmentModel(
+            id: json['enrollment_id'].toString(),
+            studentId: json['student_id'].toString(),
+            classId: classId,
+            status: 'active',
+            grade: json['grade'],
+            studentName: json['student_name'],
+            studentNim: json['student_nim'],
+            calculatedScore: json['calculated_score'] != null ? double.tryParse(json['calculated_score'].toString()) : null,
+          )).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting class grades: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<GradeDetailModel?> getStudentGradeDetail(String classId, String studentId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/grades/student_detail.php?class_id=$classId&student_id=$studentId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return GradeDetailModel.fromJson(data['data']);
+        }
+      }
+    } catch (e) {
+      print('Error getting grade detail: $e');
+    }
+    return null;
+  }
+
+  @override
+  Future<bool> updateFinalGrade(String enrollmentId, String grade) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/academic/grades/update_final_grade.php'),
+        body: jsonEncode({'enrollment_id': enrollmentId, 'grade': grade}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error updating grade: $e');
+    }
+    return false;
+  }
+
+  @override
+  Future<List<EnrollmentModel>> getStudentAllGrades(String studentId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/grades/student_list.php?student_id=$studentId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+           return (data['data'] as List).map((json) {
+            return EnrollmentModel(
+              id: '', // Not returned by list endpoint
+              studentId: studentId,
+              classId: json['class_id'].toString(),
+              status: 'active',
+              grade: json['grade'],
+              classSession: ClassSessionModel(
+                id: json['class_id'].toString(),
+                courseId: '',
+                dosenId: '',
+                dosenName: '',
+                day: '', timeStart: '', timeEnd: '', room: '', quota: 0, enrolledCount: 0,
+                course: CourseModel(
+                  id: '',
+                  code: json['course_code'],
+                  name: json['course_name'],
+                  sks: int.tryParse(json['sks'].toString()) ?? 0,
+                  semester: int.tryParse(json['semester'].toString()) ?? 0,
+                  majorId: '',
+                ),
+              ),
+            );
+          }).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting all student grades: $e');
+    }
+    return [];
+  }
 }

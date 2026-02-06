@@ -53,6 +53,12 @@ abstract class AcademicRepository {
     required String filename,
   });
   Future<bool> deleteMaterial(String materialId);
+
+  // Grades
+  Future<List<EnrollmentModel>> getClassGrades(String classId);
+  Future<GradeDetailModel?> getStudentGradeDetail(String classId, String studentId);
+  Future<bool> updateFinalGrade(String enrollmentId, String grade);
+  Future<List<EnrollmentModel>> getStudentAllGrades(String studentId);
 }
 
 class MockAcademicRepository implements AcademicRepository {
@@ -288,4 +294,16 @@ class MockAcademicRepository implements AcademicRepository {
     await Future.delayed(const Duration(milliseconds: 500));
     return true;
   }
+
+  @override
+  Future<List<EnrollmentModel>> getClassGrades(String classId) async => [];
+
+  @override
+  Future<GradeDetailModel?> getStudentGradeDetail(String classId, String studentId) async => null;
+
+  @override
+  Future<bool> updateFinalGrade(String enrollmentId, String grade) async => true;
+
+  @override
+  Future<List<EnrollmentModel>> getStudentAllGrades(String studentId) async => [];
 }

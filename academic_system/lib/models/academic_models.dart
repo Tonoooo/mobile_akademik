@@ -149,6 +149,7 @@ class EnrollmentModel {
 
   final String? studentName;
   final String? studentNim;
+  final double? calculatedScore;
 
   EnrollmentModel({
     required this.id,
@@ -159,6 +160,7 @@ class EnrollmentModel {
     this.grade,
     this.studentName,
     this.studentNim,
+    this.calculatedScore,
   });
 
   factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
@@ -170,6 +172,7 @@ class EnrollmentModel {
       grade: json['grade'],
       studentName: json['student_name'],
       studentNim: json['student_nim'],
+      calculatedScore: json['calculated_score'] != null ? double.tryParse(json['calculated_score'].toString()) : null,
       classSession: (json['course_name'] != null && json['day'] != null) ? ClassSessionModel.fromJson(json) : null,
     );
   }
@@ -343,6 +346,86 @@ class AttendanceSummaryModel {
       totalSakit: int.parse(json['total_sakit'].toString()),
       totalIzin: int.parse(json['total_izin'].toString()),
       totalAlpha: int.parse(json['total_alpha'].toString()),
+    );
+  }
+}
+
+class GradeDetailModel {
+  final String studentId;
+  final String enrollmentId;
+  final String? storedGrade;
+  final AttendanceGradeDetail attendance;
+  final ComponentGradeDetail tasks;
+  final ComponentGradeDetail exams;
+  final double finalScoreCalculated;
+
+  GradeDetailModel({
+    required this.studentId,
+    required this.enrollmentId,
+    this.storedGrade,
+    required this.attendance,
+    required this.tasks,
+    required this.exams,
+    required this.finalScoreCalculated,
+  });
+
+  factory GradeDetailModel.fromJson(Map<String, dynamic> json) {
+    return GradeDetailModel(
+      studentId: json['student_id'].toString(),
+      enrollmentId: json['enrollment_id'].toString(),
+      storedGrade: json['stored_grade'],
+      attendance: AttendanceGradeDetail.fromJson(json['attendance']),
+      tasks: ComponentGradeDetail.fromJson(json['tasks']),
+      exams: ComponentGradeDetail.fromJson(json['exams']),
+      finalScoreCalculated: double.parse(json['final_score_calculated'].toString()),
+    );
+  }
+}
+
+class AttendanceGradeDetail {
+  final int totalSessions;
+  final int presentCount;
+  final double score;
+
+  AttendanceGradeDetail({
+    required this.totalSessions,
+    required this.presentCount,
+    required this.score,
+  });
+
+  factory AttendanceGradeDetail.fromJson(Map<String, dynamic> json) {
+    return AttendanceGradeDetail(
+      totalSessions: int.parse(json['total_sessions'].toString()),
+      presentCount: int.parse(json['present_count'].toString()),
+      score: double.parse(json['score'].toString()),
+    );
+  }
+}
+
+class ComponentGradeDetail {
+  final List<GradeItem> items;
+  final double average;
+
+  ComponentGradeDetail({required this.items, required this.average});
+
+  factory ComponentGradeDetail.fromJson(Map<String, dynamic> json) {
+    return ComponentGradeDetail(
+      items: (json['items'] as List).map((i) => GradeItem.fromJson(i)).toList(),
+      average: double.parse(json['average'].toString()),
+    );
+  }
+}
+
+class GradeItem {
+  final String title;
+  final double score;
+
+  GradeItem({required this.title, required this.score});
+
+  factory GradeItem.fromJson(Map<String, dynamic> json) {
+    return GradeItem(
+      title: json['title'],
+      score: double.parse(json['score'].toString()),
     );
   }
 }

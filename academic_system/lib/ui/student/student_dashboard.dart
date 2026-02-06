@@ -7,6 +7,7 @@ import 'krs_page.dart';
 import 'schedule_page.dart';
 import 'kelas_page.dart';
 import 'tugas_page.dart';
+import 'grades/student_grade_list_page.dart';
 import 'profile_page.dart';
 
 class StudentDashboard extends StatefulWidget {
@@ -252,7 +253,11 @@ class StudentHomePage extends StatelessWidget {
                  Navigator.push(context, MaterialPageRoute(builder: (_) => const KrsPage()));
               }),
               _buildMenuIcon(Icons.assignment_turned_in, 'KHS', Colors.purple),
-              _buildMenuIcon(Icons.bar_chart, 'Nilai', Colors.red),
+              _buildMenuIcon(Icons.bar_chart, 'Nilai', Colors.red, onTap: () {
+                if (user != null) {
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => StudentGradeListPage(studentId: user.id)));
+                }
+              }),
               _buildMenuIcon(Icons.description, 'Transkrip', Colors.teal),
               _buildMenuIcon(Icons.qr_code_scanner, 'Presensi', Colors.indigo),
               _buildMenuIcon(Icons.supervisor_account, 'Perwalian', Colors.brown),
