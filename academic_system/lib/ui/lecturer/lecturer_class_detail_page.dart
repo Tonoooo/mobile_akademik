@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../models/academic_models.dart';
 import 'materials/lecturer_materials_page.dart';
+import 'materials/lecturer_assignments_page.dart';
 
 class LecturerClassDetailPage extends StatelessWidget {
   final ClassSessionModel classSession;
@@ -85,9 +86,10 @@ class LecturerClassDetailPage extends StatelessWidget {
                   'Tugas', 
                   Icons.assignment, 
                   Colors.orange,
-                  () {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Fitur Tugas akan segera hadir')));
-                  },
+                  () => Navigator.push(
+                    context, 
+                    MaterialPageRoute(builder: (_) => LecturerAssignmentsPage(classSession: classSession))
+                  ),
                 ),
                 _buildMenuCard(
                   context, 

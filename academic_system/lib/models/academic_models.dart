@@ -165,6 +165,7 @@ class MaterialModel {
   final String fileUrl;
   final String type; // 'material', 'tugas', 'ujian'
   final DateTime createdAt;
+  final DateTime? deadline;
 
   MaterialModel({
     required this.id,
@@ -174,6 +175,7 @@ class MaterialModel {
     required this.fileUrl,
     required this.type,
     required this.createdAt,
+    this.deadline,
   });
 
   factory MaterialModel.fromJson(Map<String, dynamic> json) {
@@ -185,6 +187,7 @@ class MaterialModel {
       fileUrl: json['file_url'],
       type: json['type'],
       createdAt: DateTime.parse(json['created_at']),
+      deadline: json['deadline'] != null ? DateTime.parse(json['deadline']) : null,
     );
   }
 }
@@ -196,6 +199,9 @@ class SubmissionModel {
   final String fileUrl;
   final DateTime submittedAt;
   final double? score;
+  final String? answer;
+  final String? studentName;
+  final String? studentNim;
 
   SubmissionModel({
     required this.id,
@@ -204,5 +210,22 @@ class SubmissionModel {
     required this.fileUrl,
     required this.submittedAt,
     this.score,
+    this.answer,
+    this.studentName,
+    this.studentNim,
   });
+
+  factory SubmissionModel.fromJson(Map<String, dynamic> json) {
+    return SubmissionModel(
+      id: json['id'].toString(),
+      materialId: json['material_id'].toString(),
+      studentId: json['student_id'].toString(),
+      fileUrl: json['file_url'] ?? '',
+      submittedAt: DateTime.parse(json['submitted_at']),
+      score: json['grade'] != null ? double.tryParse(json['grade'].toString()) : null,
+      answer: json['answer'],
+      studentName: json['student_name'],
+      studentNim: json['student_nim'],
+    );
+  }
 }

@@ -20,6 +20,16 @@ abstract class AcademicRepository {
   Future<List<MaterialModel>> getClassMaterials(String classId, {String? type});
   Future<bool> uploadSubmission(SubmissionModel submission);
   Future<SubmissionModel?> getStudentSubmission(String materialId, String studentId);
+  Future<List<SubmissionModel>> getAssignmentSubmissions(String materialId);
+  Future<bool> gradeSubmission(String submissionId, double grade);
+  Future<bool> submitAssignment({
+    required String studentId,
+    required String materialId,
+    String answer = '',
+    String? filePath,
+    Uint8List? fileBytes,
+    String? filename,
+  });
 
   // Lecturer Features
   Future<List<ClassSessionModel>> getLecturerClasses(String dosenId);
@@ -27,6 +37,8 @@ abstract class AcademicRepository {
     required String classSessionId, 
     required String title, 
     required String type,
+    String description = '',
+    DateTime? deadline,
     String? filePath,
     Uint8List? fileBytes,
     required String filename,
@@ -129,6 +141,36 @@ class MockAcademicRepository implements AcademicRepository {
   }
 
   @override
+  Future<List<SubmissionModel>> getAssignmentSubmissions(String materialId) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    return _submissions.where((s) => s.materialId == materialId).toList();
+  }
+
+  @override
+  Future<bool> gradeSubmission(String submissionId, double grade) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final index = _submissions.indexWhere((s) => s.id == submissionId);
+    if (index != -1) {
+      // _submissions[index].score = grade; // Immutable, would need copyWith
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> submitAssignment({
+    required String studentId,
+    required String materialId,
+    String answer = '',
+    String? filePath,
+    Uint8List? fileBytes,
+    String? filename,
+  }) async {
+     await Future.delayed(const Duration(seconds: 1));
+     return true;
+  }
+
+  @override
   Future<bool> enrollClass(String studentId, String classId) async {
     await Future.delayed(const Duration(seconds: 1));
     
@@ -201,6 +243,8 @@ class MockAcademicRepository implements AcademicRepository {
     required String classSessionId, 
     required String title, 
     required String type,
+    String description = '',
+    DateTime? deadline,
     String? filePath,
     Uint8List? fileBytes,
     required String filename,

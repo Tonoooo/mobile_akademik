@@ -7,6 +7,7 @@ import '../../viewmodels/student_viewmodel.dart';
 import '../../viewmodels/auth_viewmodel.dart';
 import '../../models/academic_models.dart';
 import 'materials/student_materials_page.dart';
+import 'materials/student_assignments_page.dart';
 
 class ClassDetailPage extends StatefulWidget {
   final ClassSessionModel classSession;
@@ -100,7 +101,14 @@ class _ClassDetailPageState extends State<ClassDetailPage> {
                     ),
                   );
                 }),
-                _buildActionButton(Icons.assignment, 'Tugas', Colors.orange, () {}),
+                _buildActionButton(Icons.assignment, 'Tugas', Colors.orange, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StudentAssignmentsPage(classSession: widget.classSession),
+                    ),
+                  );
+                }),
                 _buildActionButton(Icons.quiz, 'Ujian', Colors.red, () {}),
                 _buildActionButton(Icons.qr_code, 'Absen', Colors.green, () {}),
               ],

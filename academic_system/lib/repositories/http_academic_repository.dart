@@ -247,6 +247,8 @@ class HttpAcademicRepository implements AcademicRepository {
     required String classSessionId, 
     required String title, 
     required String type,
+    String description = '',
+    DateTime? deadline,
     String? filePath,
     Uint8List? fileBytes,
     required String filename,
@@ -256,6 +258,12 @@ class HttpAcademicRepository implements AcademicRepository {
       request.fields['class_session_id'] = classSessionId;
       request.fields['title'] = title;
       request.fields['type'] = type;
+      request.fields['description'] = description;
+      if (deadline != null) {
+        request.fields['deadline'] = deadline.toIso8601String();
+      }
+      
+      // ... (existing file handling)
       
       if (fileBytes != null) {
         request.files.add(http.MultipartFile.fromBytes(
@@ -304,5 +312,92 @@ class HttpAcademicRepository implements AcademicRepository {
   Future<bool> uploadSubmission(SubmissionModel submission) async => false; // Implemented
 
   @override
-  Future<SubmissionModel?> getStudentSubmission(String materialId, String studentId) async => null;
+    @override
+  Future<SubmissionModel?> getStudentSubmission(String materialId, String studentId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/academic/submissions/get_submission.php?material_id=$materialId&student_id=$studentId')
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return SubmissionModel.fromJson(data['data']);
+        }
+      }
+    } catch (e) {
+      print('Error getting student submission: $e');
+    }
+    return null;
+  }
+
+  @override
+  Future<List<SubmissionModel>> getAssignmentSubmissions(String materialId) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/academic/submissions/list_by_material.php?material_id=$materialId'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['success'] == true) {
+          return (data['data'] as List).map((json) => SubmissionModel.fromJson(json)).toList();
+        }
+      }
+    } catch (e) {
+      print('Error getting submissions: $e');
+    }
+    return [];
+  }
+
+  @override
+  Future<bool> gradeSubmission(String submissionId, double grade) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/academic/submissions/grade.php'),
+        body: jsonEncode({'submission_id': submissionId, 'grade': grade}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error grading submission: $e');
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> submitAssignment({
+    required String studentId,
+    required String materialId,
+    String answer = '',
+    String? filePath,
+    Uint8List? fileBytes,
+    String? filename,
+  }) async {
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse('$baseUrl/academic/submissions/submit_assignment.php'));
+      request.fields['student_id'] = studentId;
+      request.fields['material_id'] = materialId;
+      request.fields['answer'] = answer;
+      
+      if (fileBytes != null && filename != null) {
+        request.files.add(http.MultipartFile.fromBytes(
+          'file', 
+          fileBytes,
+          filename: filename,
+        ));
+      } else if (filePath != null) {
+        request.files.add(await http.MultipartFile.fromPath('file', filePath));
+      }
+
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        final respStr = await response.stream.bytesToString();
+        final data = jsonDecode(respStr);
+        return data['success'] == true;
+      }
+    } catch (e) {
+      print('Error submitting assignment: $e');
+    }
+    return false;
+  }
 }
