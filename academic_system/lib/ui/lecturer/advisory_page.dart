@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../repositories/academic_repository.dart';
 import '../../models/user_model.dart';
 import '../../viewmodels/auth_viewmodel.dart';
+import 'advisory_detail_page.dart';
 
 class AdvisoryPage extends StatefulWidget {
   const AdvisoryPage({super.key});
@@ -102,48 +103,55 @@ class _AdvisoryPageState extends State<AdvisoryPage> {
                     return Card(
                       margin: const EdgeInsets.only(bottom: 12),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  student.name,
-                                  style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
-                                ),
-                                _buildStatusBadge(student.krsStatus),
-                              ],
+                      clipBehavior: Clip.antiAlias,
+                      child: InkWell(
+                        onTap: () async {
+                           final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AdvisoryDetailPage(student: student),
                             ),
-                            const SizedBox(height: 4),
-                            Text('NIM: ${student.nimOrNip}', style: GoogleFonts.poppins(color: Colors.grey)),
-                            Text('Prodi: ${student.majorName}', style: GoogleFonts.poppins(color: Colors.grey)),
-                            const SizedBox(height: 12),
-                            if (student.krsStatus == 'submitted')
+                          );
+                          if (result == true) {
+                            _fetchAdvisees();
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  OutlinedButton(
-                                    onPressed: () => _updateStatus(student, 'rejected'),
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.red,
-                                      side: const BorderSide(color: Colors.red),
-                                    ),
-                                    child: const Text('Tolak'),
+                                  Text(
+                                    student.name,
+                                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 16),
                                   ),
-                                  const SizedBox(width: 12),
-                                  ElevatedButton(
-                                    onPressed: () => _updateStatus(student, 'approved'),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                    ),
-                                    child: const Text('Setujui', style: TextStyle(color: Colors.white)),
-                                  ),
+                                  _buildStatusBadge(student.krsStatus),
                                 ],
                               ),
-                          ],
+                              const SizedBox(height: 4),
+                              Text('NIM: ${student.nimOrNip}', style: GoogleFonts.poppins(color: Colors.grey)),
+                              Text('Prodi: ${student.majorName}', style: GoogleFonts.poppins(color: Colors.grey)),
+                              const SizedBox(height: 12),
+                              // Prompt text instead of buttons
+                              if (student.krsStatus == 'submitted')
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Tinjau KRS',
+                                      style: GoogleFonts.poppins(
+                                        color: Colors.blue, 
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+                                    const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.blue),
+                                  ],
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                     );
